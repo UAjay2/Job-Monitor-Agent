@@ -1,0 +1,7 @@
+flask
+flask-cors
+schedule
+scikit-learn
+requests
+beautifulsoup4
+python-dotenv
