@@ -18,8 +18,8 @@ const API_BASE = "http://localhost:5000/api";
 // Maps each category to a color so the table is scannable at a glance.
 const CATEGORY_COLORS = {
   "Apply First": "#2e7d32", // green
-  "Good Match": "#f9a825", // yellow
-  Stretch: "#c62828", // red
+  "Good Match": "#f9a825",  // yellow
+  Stretch: "#c62828",       // red
 };
 
 function App() {
@@ -65,9 +65,7 @@ function App() {
       await axios.post(`${API_BASE}/profile`, profile, { timeout: 90000 });
       setProfileMessage("Profile saved. You can now run a scan.");
     } catch (err) {
-      setProfileMessage(
-        "Failed to save -- check that all fields are filled in and try again.",
-      );
+      setProfileMessage("Failed to save -- check that all fields are filled in and try again.");
     } finally {
       setSavingProfile(false);
     }
@@ -88,28 +86,20 @@ function App() {
   // and tell the user what's happening instead of failing immediately.
   const triggerScan = async () => {
     setLoading(true);
-    setScanMessage(
-      "Waking up server (can take up to a minute if it was idle)...",
-    );
+    setScanMessage("Waking up server (can take up to a minute if it was idle)...");
     try {
-      const res = await axios.post(
-        `${API_BASE}/trigger-scan`,
-        {},
-        { timeout: 90000 },
-      );
+      const res = await axios.post(`${API_BASE}/trigger-scan`, {}, { timeout: 90000 });
       if (res.data.error) {
-        setScanMessage(
-          `Scan couldn't run: ${res.data.error}. Try re-saving your profile.`,
-        );
+        setScanMessage(`Scan couldn't run: ${res.data.error}. Try re-saving your profile.`);
       } else {
         setScanMessage(
-          `Found ${res.data.listings_found} listings, ${res.data.new_matches} new matches.`,
+          `Found ${res.data.listings_found} listings, ${res.data.new_matches} new matches.`
         );
       }
       await fetchListings();
     } catch (err) {
       setScanMessage(
-        "Scan failed -- the server may still be waking up. Wait a few seconds and try again.",
+        "Scan failed -- the server may still be waking up. Wait a few seconds and try again."
       );
     } finally {
       setLoading(false);
@@ -119,15 +109,13 @@ function App() {
   // Optimistically updates the UI, then tells the backend the new status.
   const updateStatus = async (id, status) => {
     setListings((prev) =>
-      prev.map((l) => (l.id === id ? { ...l, status } : l)),
+      prev.map((l) => (l.id === id ? { ...l, status } : l))
     );
     await axios.post(`${API_BASE}/listings/${id}/status`, { status });
   };
 
   return (
-    <div
-      style={{ fontFamily: "sans-serif", maxWidth: 900, margin: "2rem auto" }}
-    >
+    <div style={{ fontFamily: "sans-serif", maxWidth: 900, margin: "2rem auto" }}>
       <h1>Job Monitor Dashboard</h1>
 
       <button onClick={() => setShowProfileForm((prev) => !prev)}>
@@ -157,9 +145,7 @@ function App() {
             type="text"
             value={profile.target_roles}
             placeholder="Business Analyst, Data Analyst, Junior Developer"
-            onChange={(e) =>
-              handleProfileChange("target_roles", e.target.value)
-            }
+            onChange={(e) => handleProfileChange("target_roles", e.target.value)}
           />
 
           <label style={labelStyle}>Location</label>
@@ -171,9 +157,7 @@ function App() {
             onChange={(e) => handleProfileChange("location", e.target.value)}
           />
 
-          <label style={labelStyle}>
-            Resume Text (paste your full resume content)
-          </label>
+          <label style={labelStyle}>Resume Text (paste your full resume content)</label>
           <textarea
             style={{ ...inputStyle, height: "160px" }}
             value={profile.resume_text}
@@ -181,11 +165,7 @@ function App() {
             onChange={(e) => handleProfileChange("resume_text", e.target.value)}
           />
 
-          <button
-            onClick={saveProfile}
-            disabled={savingProfile}
-            style={{ marginTop: "0.5rem" }}
-          >
+          <button onClick={saveProfile} disabled={savingProfile} style={{ marginTop: "0.5rem" }}>
             {savingProfile ? "Saving..." : "Save Profile"}
           </button>
           {profileMessage && <p>{profileMessage}</p>}
@@ -199,9 +179,7 @@ function App() {
         {scanMessage && <p>{scanMessage}</p>}
       </div>
 
-      <table
-        style={{ width: "100%", borderCollapse: "collapse", marginTop: "1rem" }}
-      >
+      <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "1rem" }}>
         <thead>
           <tr>
             <th style={cellStyle}>Title</th>
@@ -218,9 +196,7 @@ function App() {
               <td style={cellStyle}>{job.title}</td>
               <td style={cellStyle}>{job.company}</td>
               <td style={cellStyle}>{job.fit_score}%</td>
-              <td
-                style={{ ...cellStyle, color: CATEGORY_COLORS[job.category] }}
-              >
+              <td style={{ ...cellStyle, color: CATEGORY_COLORS[job.category] }}>
                 {job.category}
               </td>
               <td style={cellStyle}>
@@ -243,9 +219,7 @@ function App() {
         </tbody>
       </table>
 
-      {listings.length === 0 && (
-        <p>No listings yet -- click "Run Scan Now" to start.</p>
-      )}
+      {listings.length === 0 && <p>No listings yet -- click "Run Scan Now" to start.</p>}
     </div>
   );
 }
