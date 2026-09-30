@@ -13,7 +13,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.DEV
+  ? "http://localhost:5000/api"
+  : "https://job-monitor-agent.onrender.com/api";
 
 // Maps each category to a color so the table is scannable at a glance.
 const CATEGORY_COLORS = {
